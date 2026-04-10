@@ -50,9 +50,13 @@ fi
 #                   Setup k3d + kubectl            #
 #~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=#
 
-# Install k3d 
-echo -e "${BLUE}Starting k3d...${NC}"
-wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+# Install k3d
+if command -v k3d &> /dev/null; then
+    echo -e "${GREEN}k3d is already installed${NC}"
+else
+    echo -e "${BLUE}Starting k3d...${NC}"
+    wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+fi
 
 # Install kubectl
 if command -v kubectl &> /dev/null; then
@@ -123,6 +127,7 @@ fi
 #   It will be re-created on demand by Argo CD if a new admin password must be re-generated.
 ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 
+echo ""
 echo -e "${GREEN}============================================${NC}"
 echo -e "${GREEN}✓ Setup Complete!${NC}"
 echo -e "${GREEN}============================================${NC}"
