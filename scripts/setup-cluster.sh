@@ -100,25 +100,21 @@ fi
 #~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=#
 
 if kubectl -n argocd get deployment argocd-server &> /dev/null; then
-    echo -e "${GREEN}ArgoCD already installed, applying updates...${NC}"
 
-    kubectl apply -n argocd -f ./argocd/ingress.yaml
-    kubectl patch deployment argocd-server -n argocd --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--insecure"}]'
-    kubectl rollout status deployment/argocd-server -n argocd
+    echo -e "${GREEN}ArgoCD already installed${NC}"
 
 else
     echo -e "${BLUE}Installing ArgoCD...${NC}"
-    kubectl create namespace argocd
-    kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-    kubectl wait -n argocd --for=condition=Ready pods --all --timeout=300s
+    helm repo add argo https://argoproj.github.io/argo-helm
+    helm repo update
 
-    kubectl apply -n argocd -f ./argocd/ingress.yaml
+    helm install argocd argo/argo-cd \
+    --namespace argocd \
+    --create-namespace \
+    --values argocd/values.yaml 1>/dev/null
 
-    kubectl patch deployment argocd-server -n argocd --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--insecure"}]'
-    kubectl rollout status deployment/argocd-server -n argocd
-
-    kubectl wait -n argocd --for=condition=Available deployment argocd-server --timeout=120s
+    kubectl wait --namespace argocd --for=condition=available deployment/argocd-server --timeout=120s
 
 fi
 
