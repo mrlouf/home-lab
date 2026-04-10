@@ -1,0 +1,11 @@
+apiVersion: v2
+name: dawn-treader
+description: Application Transcendence - Full Stack Web Application
+type: application
+
+version: 0.2.0
+appVersion: "0.8.1"
+
+maintainers:
+  - name: Nicolas
+    email: ponchon.nicolas@gmail.com

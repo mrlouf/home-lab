@@ -1,0 +1,42 @@
+Dawn Treader has been deployed successfully!
+
+Check the status:
+  kubectl get pods -l "app.kubernetes.io/instance={{ .Release.Name }}"
+  kubectl get services -l "app.kubernetes.io/instance={{ .Release.Name }}"
+
+Access the application at:
+https://localhost
+
+Frontend (direct):
+  kubectl port-forward svc/frontend 5173:5173
+  echo "Access via: http://localhost:5173"
+
+Backend API (direct):
+  kubectl port-forward svc/backend 3100:3100
+  echo "Access via: http://localhost:3100"
+
+{{- if .Values.adminer.enabled }}
+Adminer (Database Admin):
+  kubectl port-forward svc/adminer 1090:1090
+  echo "Access via: http://localhost:1090"
+{{- end }}
+
+{{- if .Values.grafana.enabled }}
+Grafana:
+  kubectl port-forward svc/grafana 3001:3000
+  echo "Access via: http://localhost:3001"
+  Username: {{ .Values.grafana.adminUser }}
+  Password: <check your secrets>
+{{- end }}
+
+{{- if .Values.prometheus.enabled }}
+Prometheus:
+  kubectl port-forward svc/prometheus 9090:9090
+  echo "Access via: http://localhost:9090"
+{{- end }}s
+
+Update the deployment:
+  helm upgrade {{ .Release.Name }} ./helm/dawn-treader
+
+Uninstall:
+  helm uninstall {{ .Release.Name }}
