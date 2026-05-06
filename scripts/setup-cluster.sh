@@ -141,6 +141,8 @@ else
     --create-namespace \
     --values gitea/values.yaml 1>/dev/null
 
+    kubectl wait --namespace gitea --for=condition=available deployment/gitea --timeout=120s
+
 fi
 
 #~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=#
