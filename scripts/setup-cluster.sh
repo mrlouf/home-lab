@@ -123,6 +123,27 @@ else
 fi
 
 #~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=#
+#                   Install Gitea via Helm         #
+#~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=#
+
+if kubectl -n gitea get deployment gitea &> /dev/null; then
+
+    echo -e "${GREEN}Gitea already installed${NC}"
+
+else
+    echo -e "${BLUE}Installing Gitea...${NC}"
+
+    helm repo add gitea-charts https://dl.gitea.com/charts/
+    helm repo update
+
+    helm install gitea gitea-charts/gitea \
+    --namespace gitea \
+    --create-namespace \
+    --values gitea/values.yaml 1>/dev/null
+
+fi
+
+#~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=#
 #                   Deploy apps                    #
 #~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=#
 
