@@ -1,6 +1,12 @@
 global:
   domain: gitea.localhost
 
+service:
+  ssh:
+    type: NodePort
+    port: 2222
+    nodePort: 30022
+
 ingress:
   enabled: true
   pathType: Prefix
@@ -29,6 +35,13 @@ gitea:
   config:
     database:
       DB_TYPE: postgres
+
     indexer:
       ISSUE_INDEXER_TYPE: bleve
       REPO_INDEXER_ENABLED: true
+
+    server:
+      SSH_DOMAIN: gitea.localhost
+      SSH_PORT: 30022
+      START_SSH_SERVER: true
+
