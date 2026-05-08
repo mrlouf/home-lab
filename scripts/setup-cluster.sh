@@ -73,12 +73,17 @@ if k3d cluster list | grep -q "$CLUSTER_NAME"; then
 else
     # Create k3d cluster
     echo -e "${BLUE}Creating k3d cluster...${NC}"
+
+    mkdir -p ~/k3d-volumes/gitea
+
     k3d cluster create "$CLUSTER_NAME" --wait \
-      --port "80:80@loadbalancer" \
-      --port "443:443@loadbalancer" \
-      --port "5173:5173@loadbalancer" \
-      --port "3100:3100@loadbalancer" \
-      --agents 2
+    --volume ~/k3d-volumes/gitea:/data/gitea@all \
+    --port "80:80@loadbalancer" \
+    --port "443:443@loadbalancer" \
+    --port "5173:5173@loadbalancer" \
+    --port "3100:3100@loadbalancer" \
+    --port "30022:30022@loadbalancer" \
+    --agents 2
 fi
 
 

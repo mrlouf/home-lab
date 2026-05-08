@@ -7,6 +7,10 @@ service:
     port: 2222
     nodePort: 30022
 
+persistence:
+  enabled: true
+  existingClaim: gitea-pvc
+
 ingress:
   enabled: true
   pathType: Prefix
